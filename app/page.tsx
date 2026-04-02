@@ -1,44 +1,39 @@
 import Image from "next/image";
 
-export default function Home() {
-  const products = [
-    {
-      id: 1,
-      name: "ساعة ذكية فاخرة",
-      price: "299 درهم",
-      image: "https://images.unsplash.com/photo-1546868871-7041f2a55e12?auto=format&fit=crop&w=800&q=80",
-    },
-    {
-      id: 2,
-      name: "سماعات لاسلكية عازلة للضوضاء",
-      price: "199 درهم",
-      image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=800&q=80",
-    },
-    {
-      id: 3,
-      name: "عطر رجالي مميز",
-      price: "150 درهم",
-      image: "https://images.unsplash.com/photo-1523293115678-efa8f6b0f1e0?auto=format&fit=crop&w=800&q=80",
-    },
-    {
-      id: 4,
-      name: "نظارات شمسية كلاسيكية",
-      price: "99 درهم",
-      image: "https://images.unsplash.com/photo-1511499767150-a48a237f0083?auto=format&fit=crop&w=800&q=80",
-    },
-    {
-      id: 5,
-      name: "حقيبة جلدية أصلية",
-      price: "350 درهم",
-      image: "https://images.unsplash.com/photo-1547949003-9792a18a2601?auto=format&fit=crop&w=800&q=80",
-    },
-    {
-      id: 6,
-      name: "حذاء رياضي عصري",
-      price: "240 درهم",
-      image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80",
-    },
-  ];
+async function getProducts() {
+  try {
+    const res = await fetch("https://api.airtable.com/v0/appPNGhHIntf8vSoG/tbl2V5avQ8IhreFq7?view=viwlE8vXYyhdMIKLw", {
+      headers: {
+        Authorization: `Bearer ${process.env.AIRTABLE_API_TOKEN}`
+      },
+      next: { revalidate: 10 }
+    });
+    
+    if (!res.ok) {
+      console.error("Failed to fetch from Airtable");
+      return [];
+    }
+    
+    const data = await res.json();
+    return data.records.map((record: any) => {
+      const fields = record.fields;
+      const imageUrl = fields["Product Image"]?.[0]?.url || "https://images.unsplash.com/photo-1546868871-7041f2a55e12?auto=format&fit=crop&w=800&q=80";
+      
+      return {
+        id: record.id,
+        name: fields["Product Name"] || "منتج بدون اسم",
+        price: fields["Price"] ? `${fields["Price"]} درهم` : "السعر غير متوفر",
+        image: imageUrl,
+      };
+    });
+  } catch (err) {
+    console.error(err);
+    return [];
+  }
+}
+
+export default async function Home() {
+  const products = await getProducts();
 
   const whatsappNumber = "212600000000"; // Replace with actual number
 
@@ -106,6 +101,7 @@ export default function Home() {
                       src={product.image}
                       alt={product.name}
                       fill
+                      unoptimized
                       className="object-cover transition-transform duration-500 group-hover:scale-110"
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     />
