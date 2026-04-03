@@ -3,7 +3,7 @@ export const PRODUCTS_TABLE = "tbl2V5avQ8IhreFq7";
 export const VARIANTS_TABLE = "tbltcZA9EF5jiSm7R";
 
 /** Linked record field on variants → products (rename here if your Airtable column differs) */
-const VARIANT_PRODUCT_FIELD = "Product référence";
+const VARIANT_PRODUCT_FIELD = "Product";
 
 export type Product = {
   id: string;
