@@ -2,7 +2,7 @@ import Image from "next/image";
 
 async function getProducts() {
   try {
-    const res = await fetch("https://api.airtable.com/v0/appPNGhHIntf8vSoG/tbl2V5avQ8IhreFq7?view=viwlE8vXYyhdMIKLw", {
+    const res = await fetch("https://api.airtable.com/v0/appPNGhHIntf8vSoG/tbl2V5avQ8IhreFq7", {
       headers: {
         Authorization: `Bearer ${process.env.AIRTABLE_API_TOKEN}`
       },
