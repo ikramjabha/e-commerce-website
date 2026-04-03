@@ -15,7 +15,7 @@ async function getProducts() {
     });
 
     if (!res.ok) {
-      console.error("Failed to fetch from Airtable");
+      console.error("Failedd to fetch from Airtable");
       return [];
     }
 
