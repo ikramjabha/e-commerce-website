@@ -1,4 +1,6 @@
 import Image from "next/image";
+import Link from "next/link";
+import { productPathFromName } from "@/lib/airtable";
 
 type Product = {
   id: string;
@@ -27,7 +29,11 @@ export default function TopSales({ topProducts }: { topProducts: Product[] }) {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {topProducts.map((item) => (
-            <div key={item.id} className="group relative rounded-2xl overflow-hidden bg-zinc-100">
+            <Link
+              key={item.id}
+              href={productPathFromName(item.name)}
+              className="group relative rounded-2xl overflow-hidden bg-zinc-100 block"
+            >
               <div className="relative aspect-[4/5] overflow-hidden">
                 <Image
                   src={item.image}
@@ -50,7 +56,7 @@ export default function TopSales({ topProducts }: { topProducts: Product[] }) {
                   <p className="text-lg font-bold text-white/80">{item.price}</p>
                 </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </div>

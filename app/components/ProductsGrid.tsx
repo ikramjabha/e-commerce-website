@@ -1,7 +1,9 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useRef, useState, useEffect } from "react";
+import { productPathFromName } from "@/lib/airtable";
 
 type Product = {
   id: string;
@@ -78,7 +80,10 @@ export default function ProductsGrid({ products }: { products: Product[] }) {
             >
               {products.map((product, index) => (
                 <div key={product.id} className="group shrink-0 w-[80vw] sm:w-[calc(50%-12px)] lg:w-[calc((100%-48px)/3)] snap-start flex flex-col">
-                  <div className="relative aspect-[4/5] overflow-hidden bg-zinc-100 rounded-3xl mb-6 shadow-sm border border-zinc-100">
+                  <Link
+                    href={productPathFromName(product.name)}
+                    className="block relative aspect-[4/5] overflow-hidden bg-zinc-100 rounded-3xl mb-6 shadow-sm border border-zinc-100"
+                  >
                     <Image
                       src={product.image}
                       alt={product.name}
@@ -88,11 +93,13 @@ export default function ProductsGrid({ products }: { products: Product[] }) {
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     />
                     <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-500"></div>
-                  </div>
+                  </Link>
                   
                   <div className="flex flex-col flex-1 px-1">
                     <div className="flex flex-col items-center text-center mb-6 gap-2">
-                      <h4 className="text-lg font-bold text-zinc-900 line-clamp-1">{product.name}</h4>
+                      <Link href={productPathFromName(product.name)} className="hover:opacity-80 transition-opacity">
+                        <h4 className="text-lg font-bold text-zinc-900 line-clamp-1">{product.name}</h4>
+                      </Link>
                       <p className="text-xl font-black text-zinc-600">{product.price}</p>
                     </div>
                     
