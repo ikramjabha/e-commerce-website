@@ -8,6 +8,7 @@ const VARIANT_PRODUCT_FIELD = "Product";
 export type Product = {
   id: string;
   name: string;
+  slug: string;
   price: string;
   priceValue: number | null;
   image: string;
@@ -36,10 +37,12 @@ function mapProductRecord(record: {
         ? Number(fields["Price"])
         : null;
   const name = (fields["Product Name"] as string) || "بدون اسم";
+  const slug = (fields["Slug"] as string) || record.id;
 
   return {
     id: record.id,
     name,
+    slug,
     price: priceNum != null && !Number.isNaN(priceNum) ? `${priceNum} درهم` : "السعر غير متوفر",
     priceValue: priceNum != null && !Number.isNaN(priceNum) ? priceNum : null,
     image: imageUrl,
@@ -83,14 +86,9 @@ async function getProductByName(name: string): Promise<Product | null> {
   return products.find((p) => p.name === trimmed) ?? null;
 }
 
-/** Slug segment is encodeURIComponent(product name). */
 export async function getProductBySlugParam(slug: string): Promise<Product | null> {
-  try {
-    const name = decodeURIComponent(slug);
-    return (await fetchProductByExactName(name)) ?? (await getProductByName(name));
-  } catch {
-    return null;
-  }
+  const products = await getProducts();
+  return products.find(p => p.slug === slug) ?? null;
 }
 
 /** Prefer formula filter for a single product by exact name (more efficient than full list). */
@@ -150,6 +148,6 @@ export async function getVariantsForProduct(productRecordId: string): Promise<Va
   }
 }
 
-export function productPathFromName(name: string): string {
-  return `/product/${encodeURIComponent(name.trim())}`;
+export function productPath(product: Product): string {
+  return `/product/${product.slug}`;
 }
