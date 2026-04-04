@@ -23,7 +23,7 @@ export default async function ProductPage({ params }: Props) {
   const product = await getProductBySlugParam(slug);
   if (!product) notFound();
 
-  const variants = await getVariantsForProduct(product.id);
+  const variants = await getVariantsForProduct(product.name);
 
   return (
     <div className="flex flex-col min-h-screen js-triggerer">
