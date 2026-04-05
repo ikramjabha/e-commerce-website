@@ -39,6 +39,8 @@ function mapProductRecord(record: {
   const name = (fields["Product Name"] as string) || "بدون اسم";
   const slug = (fields["Slug"] as string) || record.id;
 
+  console.log(`[${record.id}] ${name} -> Slug field: "${fields["Slug"]}" -> Using: "${slug}"`);
+
   return {
     id: record.id,
     name,
