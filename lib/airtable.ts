@@ -64,7 +64,7 @@ export async function getProducts(): Promise<Product[]> {
       }
     );
     if (!res.ok) {
-      console.error("Failed to fetch products from Airtablee2");
+      console.error("Failed to fetch products from Airtablee22");
       return [];
     }
     const data = await res.json();
