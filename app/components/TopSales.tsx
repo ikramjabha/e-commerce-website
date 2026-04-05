@@ -1,14 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { productPath } from "@/lib/airtable";
-
-type Product = {
-  id: string;
-  name: string;
-  slug: string;
-  price: string;
-  image: string;
-};
+import { productPath, type Product } from "@/lib/airtable";
 
 export default function TopSales({ topProducts }: { topProducts: Product[] }) {
   if (!topProducts || topProducts.length === 0) return null;

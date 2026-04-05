@@ -3,15 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRef, useState, useEffect } from "react";
-import { productPath } from "@/lib/airtable";
-
-type Product = {
-  id: string;
-  name: string;
-  slug: string;
-  price: string;
-  image: string;
-};
+import { productPath, type Product } from "@/lib/airtable";
 
 export default function ProductsGrid({ products }: { products: Product[] }) {
   const whatsappNumber = "212600000000";
