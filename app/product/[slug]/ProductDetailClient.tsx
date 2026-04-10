@@ -185,7 +185,7 @@ export default function ProductDetailClient({ product, variants }: Props) {
             )}
 
             <a
-              href={`https://wa.me/+212684452931?text=${encodeURIComponent(waText)}`}
+              href={`https://wa.me/+15556315160?text=${encodeURIComponent(waText)}`}
               target="_blank"
               rel="noopener noreferrer"
               className="w-full flex items-center justify-center gap-2 bg-zinc-900 text-white font-bold py-4 px-4 rounded-full transition-all duration-300 hover:bg-zinc-800 hover:-translate-y-0.5 shadow-md shadow-zinc-900/10"
