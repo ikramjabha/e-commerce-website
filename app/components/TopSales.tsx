@@ -29,7 +29,7 @@ export default function TopSales({ topProducts }: { topProducts: Product[] }) {
             >
               <div className="relative aspect-[4/5] overflow-hidden">
                 <Image
-                  src={item.image}
+                  src={item.images[0]}
                   alt={item.name}
                   fill
                   unoptimized
