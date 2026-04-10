@@ -11,7 +11,7 @@ export type Product = {
   slug: string;
   price: string;
   priceValue: number | null;
-  image: string;
+  images: string[];
 };
 
 export type Variant = {
@@ -39,7 +39,12 @@ function mapProductRecord(record: {
   const name = (fields["Product Name"] as string) || "بدون اسم";
   const slug = (fields["Slug"] as string) || record.id;
 
-  console.log(`[${record.id}] ${name} -> Slug field: "${fields["Slug"]}" -> Using: "${slug}"`);
+  const images = imgs
+    ?.map((img) => img.url)
+    .filter((url): url is string => !!url) || [];
+  if (images.length === 0) {
+    images.push(imageUrl);
+  }
 
   return {
     id: record.id,
@@ -47,7 +52,7 @@ function mapProductRecord(record: {
     slug,
     price: priceNum != null && !Number.isNaN(priceNum) ? `${priceNum} درهم` : "السعر غير متوفر",
     priceValue: priceNum != null && !Number.isNaN(priceNum) ? priceNum : null,
-    image: imageUrl,
+    images: images,
   };
 }
 

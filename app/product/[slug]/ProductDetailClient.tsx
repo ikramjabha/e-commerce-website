@@ -39,6 +39,9 @@ export default function ProductDetailClient({ product, variants }: Props) {
 
   const [color, setColor] = useState<string | null>(() => variants[0]?.color ?? null);
   const [size, setSize] = useState<string | null>(() => variants[0]?.size ?? null);
+  const [currentImage, setCurrentImage] = useState(0);
+
+  const images = product.images || [];
 
   const activeVariant = useMemo(() => findVariant(variants, color, size), [variants, color, size]);
 
@@ -77,16 +80,39 @@ export default function ProductDetailClient({ product, variants }: Props) {
         </Link>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-16 items-start">
-          <div className="relative aspect-[4/5] w-full overflow-hidden rounded-3xl bg-zinc-100 border border-zinc-100 shadow-sm">
-            <Image
-              src={product.image}
-              alt={product.name}
-              fill
-              unoptimized
-              className="object-cover"
-              sizes="(max-width: 768px) 100vw, 50vw"
-              priority
-            />
+          <div className="flex flex-col gap-4 w-full">
+            <div className="relative aspect-[4/5] w-full overflow-hidden rounded-3xl bg-zinc-100 border border-zinc-100 shadow-sm group">
+              <Image
+                src={images[currentImage]}
+                alt={product.name}
+                fill
+                unoptimized
+                className="object-cover transition-opacity duration-300"
+                sizes="(max-width: 768px) 100vw, 50vw"
+                priority
+              />
+            </div>
+
+            {images.length > 1 && (
+              <div className="grid grid-cols-5 gap-2 md:gap-4">
+                {images.map((img, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setCurrentImage(i)}
+                    className={`relative aspect-[4/5] rounded-xl overflow-hidden border-2 transition-all ${currentImage === i ? 'border-zinc-900 opacity-100' : 'border-transparent opacity-60 hover:opacity-100'}`}
+                  >
+                    <Image
+                      src={img}
+                      alt={`${product.name} ${i + 1}`}
+                      fill
+                      unoptimized
+                      className="object-cover"
+                      sizes="(max-width: 768px) 20vw, 10vw"
+                    />
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
           <div className="flex flex-col gap-8">
@@ -109,11 +135,10 @@ export default function ProductDetailClient({ product, variants }: Props) {
                           key={c}
                           type="button"
                           onClick={() => onPickColor(c)}
-                          className={`min-h-[44px] px-5 rounded-full text-sm font-bold transition-all border-2 ${
-                            selected
+                          className={`min-h-[44px] px-5 rounded-full text-sm font-bold transition-all border-2 ${selected
                               ? "bg-zinc-900 text-white border-zinc-900"
                               : "bg-zinc-50 text-zinc-800 border-zinc-200 hover:border-zinc-400"
-                          }`}
+                            }`}
                         >
                           {c}
                         </button>
@@ -135,13 +160,12 @@ export default function ProductDetailClient({ product, variants }: Props) {
                           type="button"
                           disabled={disabled}
                           onClick={() => onPickSize(s)}
-                          className={`min-h-[44px] px-5 rounded-full text-sm font-bold transition-all border-2 ${
-                            disabled
+                          className={`min-h-[44px] px-5 rounded-full text-sm font-bold transition-all border-2 ${disabled
                               ? "opacity-35 cursor-not-allowed border-zinc-100 bg-zinc-50 text-zinc-400"
                               : selected
                                 ? "bg-zinc-900 text-white border-zinc-900"
                                 : "bg-zinc-50 text-zinc-800 border-zinc-200 hover:border-zinc-400"
-                          }`}
+                            }`}
                         >
                           {s}
                         </button>

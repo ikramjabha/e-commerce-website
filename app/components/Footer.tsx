@@ -33,7 +33,7 @@ export default function Footer() {
         </div>
         
         <div className="pt-8 border-t border-zinc-200 flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-sm font-medium text-zinc-400">جميع الحقوق محفوظة &copy; 2026 متجر جودة</p>
+          <p className="text-sm font-medium text-zinc-400">جميع الحقوق محفوظة &copy; 2026</p>
         </div>
       </div>
     </footer>
