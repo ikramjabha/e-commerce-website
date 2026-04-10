@@ -58,13 +58,8 @@ export default function ProductDetailClient({ product, variants }: Props) {
     }
   };
 
-  const whatsappNumber = "212600000000";
   const waText = (() => {
-    let t = `مرحباً، أود طلب المنتج: ${product.name}`;
-    if (activeVariant) {
-      t += ` — اللون: ${activeVariant.color}، المقاس: ${activeVariant.size}`;
-      if (activeVariant.stock > 0) t += ` (متوفر: ${activeVariant.stock})`;
-    }
+    let t = `أودّ طلب المنتج ${product.name} إذا كان متوفراً لديكم. من فضلكم أريده باللون ${color} وبالمقاس ${size}.`;
     return t;
   })();
 
@@ -149,9 +144,6 @@ export default function ProductDetailClient({ product, variants }: Props) {
                           }`}
                         >
                           {s}
-                          {combo !== undefined && combo.stock <= 3 && combo.stock > 0 && (
-                            <span className="mr-1 text-xs opacity-80">({combo.stock})</span>
-                          )}
                         </button>
                       );
                     })}
@@ -160,11 +152,7 @@ export default function ProductDetailClient({ product, variants }: Props) {
 
                 {activeVariant && (
                   <p className="text-sm text-zinc-600">
-                    {activeVariant.stock > 0 ? (
-                      <>
-                        المخزون: <span className="font-bold text-zinc-900">{activeVariant.stock}</span>
-                      </>
-                    ) : (
+                    {activeVariant.stock === 0 && (
                       <span className="font-bold text-amber-700">غير متوفر بهذا الخيار</span>
                     )}
                   </p>
@@ -173,7 +161,7 @@ export default function ProductDetailClient({ product, variants }: Props) {
             )}
 
             <a
-              href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(waText)}`}
+              href={`https://wa.me/+212684452931?text=${encodeURIComponent(waText)}`}
               target="_blank"
               rel="noopener noreferrer"
               className="w-full flex items-center justify-center gap-2 bg-zinc-900 text-white font-bold py-4 px-4 rounded-full transition-all duration-300 hover:bg-zinc-800 hover:-translate-y-0.5 shadow-md shadow-zinc-900/10"
