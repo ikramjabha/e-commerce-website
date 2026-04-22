@@ -1,3 +1,4 @@
+import Link from "next/link";
 import Logo from "./Logo";
 
 export default function Footer() {
@@ -17,17 +18,17 @@ export default function Footer() {
           <div>
             <h4 className="text-zinc-900 font-bold text-lg mb-6">روابط سريعة</h4>
             <ul className="space-y-4 text-sm font-medium">
-              <li><a href="#" className="hover:text-zinc-900 transition-colors">الرئيسية</a></li>
-              <li><a href="#products" className="hover:text-zinc-900 transition-colors">المنتجات</a></li>
-              <li><a href="#arrival" className="hover:text-zinc-900 transition-colors">ميزاتنا</a></li>
+              <li><Link href="/" className="hover:text-zinc-900 transition-colors">الرئيسية</Link></li>
+              <li><Link href="/products" className="hover:text-zinc-900 transition-colors">المنتجات</Link></li>
+              <li><Link href="/features" className="hover:text-zinc-900 transition-colors">ميزاتنا</Link></li>
             </ul>
           </div>
           
           <div>
             <h4 className="text-zinc-900 font-bold text-lg mb-6">المساعدة</h4>
             <ul className="space-y-4 text-sm font-medium">
-              <li><a href="#" className="hover:text-zinc-900 transition-colors">تتبع الطلب</a></li>
-              <li><a href="#" className="hover:text-zinc-900 transition-colors">اتصل بنا</a></li>
+              <li><Link href="/tracking" className="hover:text-zinc-900 transition-colors">تتبع الطلب</Link></li>
+              <li><Link href="/contact" className="hover:text-zinc-900 transition-colors">اتصل بنا</Link></li>
             </ul>
           </div>
         </div>

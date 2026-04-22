@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 export default function HeroSection() {
   return (
@@ -36,12 +37,12 @@ export default function HeroSection() {
             </p>
             
             <div style={{ animation: "var(--animate-fade-in-up)", animationDelay: "0.3s" }} className="flex flex-col sm:flex-row items-center justify-center gap-5 w-full sm:w-auto opacity-0 [-webkit-animation-fill-mode:forwards]">
-              <a href="#products" className="inline-flex items-center justify-center px-12 py-4 text-base font-bold text-zinc-900 transition-all duration-300 bg-white rounded-full hover:bg-zinc-200 hover:scale-105 shadow-xl">
+              <Link href="/products" className="inline-flex items-center justify-center px-12 py-4 text-base font-bold text-zinc-900 transition-all duration-300 bg-white rounded-full hover:bg-zinc-200 hover:scale-105 shadow-xl">
                 تسوق المجموعة
-              </a>
-              <a href="#arrival" className="inline-flex items-center justify-center px-12 py-4 text-base font-bold text-white transition-all duration-300 bg-white/10 backdrop-blur-md border border-white/30 rounded-full hover:bg-white/20">
+              </Link>
+              <Link href="/features" className="inline-flex items-center justify-center px-12 py-4 text-base font-bold text-white transition-all duration-300 bg-white/10 backdrop-blur-md border border-white/30 rounded-full hover:bg-white/20">
                 اكتشف المزيد
-              </a>
+              </Link>
             </div>
             
           </div>

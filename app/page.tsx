@@ -16,7 +16,7 @@ export default async function Home() {
         <HeroSection />
         <ArrivalInfos />
         <TopSales topProducts={products.slice(0, 3)} />
-        <ProductsGrid products={products} />
+        <ProductsGrid products={products.slice(3, 9)} />
       </main>
       <Footer />
     </div>

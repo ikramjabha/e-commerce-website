@@ -12,12 +12,12 @@ export default function TopSales({ topProducts }: { topProducts: Product[] }) {
           <div>
             <h2 className="text-3xl md:text-4xl font-black text-zinc-900">الأكثر طلباً هذا الأسبوع</h2>
           </div>
-          <button className="text-zinc-500 font-bold hover:text-zinc-900 transition-colors flex items-center gap-2 group">
+          <Link href="/products" className="text-zinc-500 font-bold hover:text-zinc-900 transition-colors flex items-center gap-2 group">
             عرض الكل
             <svg className="w-5 h-5 transition-transform group-hover:-translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
-          </button>
+          </Link>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
