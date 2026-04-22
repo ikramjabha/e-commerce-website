@@ -16,9 +16,11 @@ export type Product = {
 
 export type Variant = {
   id: string;
+  image: string;
   color: string;
   size: string;
   stock: number;
+  product: string[];
 };
 
 function mapProductRecord(record: {
@@ -119,10 +121,13 @@ export async function fetchProductByExactName(name: string): Promise<Product | n
 }
 
 export async function getVariantsForProduct(productRecordId: string): Promise<Variant[]> {
+  const variants = await getVariants();
+  return variants.filter(v => v.product.includes(productRecordId));
+}
+
+export async function getVariants(): Promise<Variant[]> {
   try {
-    const formula = `{${VARIANT_PRODUCT_FIELD}}='${productRecordId}'`;
     const url = new URL(`https://api.airtable.com/v0/${AIRTABLE_BASE}/${VARIANTS_TABLE}`);
-    url.searchParams.set("filterByFormula", formula);
 
     const res = await fetch(url.toString(), {
       headers: authHeaders(),
@@ -144,9 +149,11 @@ export async function getVariantsForProduct(productRecordId: string): Promise<Va
             : 0;
       return {
         id: record.id,
+        image: (f["Image"] as { url?: string }[])?.[0]?.url || "",
         color: String(f["Color"] ?? "").trim() || "—",
         size: String(f["Size"] ?? "").trim() || "—",
         stock: Number.isFinite(stock) ? stock : 0,
+        product: f["Product"] as string[],
       };
     });
   } catch (e) {

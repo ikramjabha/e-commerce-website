@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import type { Product, Variant } from "@/lib/airtable";
 import { addCartItem, createCartItem } from "@/lib/cart";
 
@@ -43,11 +43,22 @@ export default function ProductDetailClient({ product, variants }: Props) {
   const [currentImage, setCurrentImage] = useState(0);
   const [addState, setAddState] = useState<"idle" | "added">("idle");
 
-  const images = product.images || [];
+  const images = useMemo(() => {
+    const allImages = variants.map((v) => v.image).filter(Boolean);
+    const uniqueImages = Array.from(new Set(allImages));
+    return uniqueImages.length > 0 ? uniqueImages : (product.images || []);
+  }, [variants, product.images]);
 
   const activeVariant = useMemo(() => findVariant(variants, color, size), [variants, color, size]);
   const isOutOfStock = activeVariant?.stock === 0;
   const canAddToCart = variants.length === 0 || (!isOutOfStock && !!color && !!size);
+
+  useEffect(() => {
+    if (activeVariant?.image) {
+      const idx = images.indexOf(activeVariant.image);
+      if (idx !== -1) setCurrentImage(idx);
+    }
+  }, [activeVariant, images]);
 
   const onPickColor = (c: string) => {
     setColor(c);
@@ -83,6 +94,19 @@ export default function ProductDetailClient({ product, variants }: Props) {
     setAddState("added");
   };
 
+  const handleImageChange = (idx: number) => {
+    setCurrentImage(idx);
+    const newImage = images[idx];
+    const matchingVariant = variants.find((v) => v.image === newImage);
+    if (matchingVariant) {
+      setColor(matchingVariant.color);
+      const hasCurrentSize = variants.some((v) => v.color === matchingVariant.color && v.size === size);
+      if (!hasCurrentSize) {
+        setSize(matchingVariant.size);
+      }
+    }
+  };
+
   return (
     <section className="py-12 md:py-20 bg-white">
       <div className="container mx-auto px-4 md:px-8 max-w-5xl">
@@ -108,6 +132,28 @@ export default function ProductDetailClient({ product, variants }: Props) {
                 sizes="(max-width: 768px) 100vw, 50vw"
                 priority
               />
+              {images.length > 1 && (
+                <>
+                  <button
+                    onClick={() => handleImageChange(currentImage === 0 ? images.length - 1 : currentImage - 1)}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/80 hover:bg-white text-zinc-900 rounded-full flex items-center justify-center shadow-md opacity-0 group-hover:opacity-100 transition-all z-10"
+                    aria-label="الصورة السابقة"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 5l7 7-7 7" />
+                    </svg>
+                  </button>
+                  <button
+                    onClick={() => handleImageChange(currentImage === images.length - 1 ? 0 : currentImage + 1)}
+                    className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/80 hover:bg-white text-zinc-900 rounded-full flex items-center justify-center shadow-md opacity-0 group-hover:opacity-100 transition-all z-10"
+                    aria-label="الصورة التالية"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M15 19l-7-7 7-7" />
+                    </svg>
+                  </button>
+                </>
+              )}
             </div>
 
             {images.length > 1 && (
@@ -115,7 +161,7 @@ export default function ProductDetailClient({ product, variants }: Props) {
                 {images.map((img, i) => (
                   <button
                     key={i}
-                    onClick={() => setCurrentImage(i)}
+                    onClick={() => handleImageChange(i)}
                     className={`relative aspect-[4/5] rounded-xl overflow-hidden border-2 transition-all ${currentImage === i ? 'border-zinc-900 opacity-100' : 'border-transparent opacity-60 hover:opacity-100'}`}
                   >
                     <Image
