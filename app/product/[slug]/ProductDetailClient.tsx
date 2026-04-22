@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import type { Product, Variant } from "@/lib/airtable";
+import { addCartItem, createCartItem } from "@/lib/cart";
 
 const SIZE_ORDER: Record<string, number> = {
   standard: 0,
@@ -40,10 +41,13 @@ export default function ProductDetailClient({ product, variants }: Props) {
   const [color, setColor] = useState<string | null>(() => variants[0]?.color ?? null);
   const [size, setSize] = useState<string | null>(() => variants[0]?.size ?? null);
   const [currentImage, setCurrentImage] = useState(0);
+  const [addState, setAddState] = useState<"idle" | "added">("idle");
 
   const images = product.images || [];
 
   const activeVariant = useMemo(() => findVariant(variants, color, size), [variants, color, size]);
+  const isOutOfStock = activeVariant?.stock === 0;
+  const canAddToCart = variants.length === 0 || (!isOutOfStock && !!color && !!size);
 
   const onPickColor = (c: string) => {
     setColor(c);
@@ -62,9 +66,22 @@ export default function ProductDetailClient({ product, variants }: Props) {
   };
 
   const waText = (() => {
-    let t = `أودّ طلب المنتج ${product.name} إذا كان متوفراً لديكم. من فضلكم أريده باللون ${color} وبالمقاس ${size}.`;
+    const t = `أودّ طلب المنتج ${product.name} إذا كان متوفراً لديكم. من فضلكم أريده باللون ${color} وبالمقاس ${size}.`;
     return t;
   })();
+
+  const handleAddToCart = () => {
+    if (!canAddToCart) return;
+
+    addCartItem(
+      createCartItem({
+        product,
+        color,
+        size,
+      })
+    );
+    setAddState("added");
+  };
 
   return (
     <section className="py-12 md:py-20 bg-white">
@@ -152,7 +169,6 @@ export default function ProductDetailClient({ product, variants }: Props) {
                   <div className="flex flex-wrap gap-2">
                     {sizes.map((s) => {
                       const selected = size === s;
-                      const combo = findVariant(variants, color, s);
                       const disabled = color ? !variants.some((v) => v.color === color && v.size === s) : false;
                       return (
                         <button
@@ -184,14 +200,35 @@ export default function ProductDetailClient({ product, variants }: Props) {
               </div>
             )}
 
-            <a
-              href={`https://wa.me/+15556315160?text=${encodeURIComponent(waText)}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full flex items-center justify-center gap-2 bg-zinc-900 text-white font-bold py-4 px-4 rounded-full transition-all duration-300 hover:bg-zinc-800 hover:-translate-y-0.5 shadow-md shadow-zinc-900/10"
-            >
-              اطلب عبر واتساب
-            </a>
+            <div className="flex flex-col gap-3">
+              <button
+                type="button"
+                onClick={handleAddToCart}
+                disabled={!canAddToCart}
+                className={`w-full flex items-center justify-center gap-2 font-bold py-4 px-4 rounded-full transition-all duration-300 shadow-md cursor-pointer ${
+                  canAddToCart
+                    ? "bg-primary-500 text-white hover:bg-primary-600 hover:-translate-y-0.5 shadow-primary-500/20"
+                    : "bg-zinc-200 text-zinc-500 cursor-not-allowed shadow-transparent"
+                }`}
+              >
+                أضف إلى السلة
+              </button>
+
+              <a
+                href={`https://wa.me/+212684452931?text=${encodeURIComponent(waText)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full flex items-center justify-center gap-2 border border-zinc-200 bg-white text-zinc-900 font-bold py-4 px-4 rounded-full transition-all duration-300 hover:border-zinc-400 hover:-translate-y-0.5"
+              >
+                اطلب عبر واتساب
+              </a>
+
+              {addState === "added" && (
+                <p className="text-sm font-medium text-emerald-700">
+                  تمت إضافة المنتج إلى السلة. يمكنك الآن متابعة الطلب من صفحة الدفع.
+                </p>
+              )}
+            </div>
           </div>
         </div>
       </div>
