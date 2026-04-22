@@ -247,18 +247,27 @@ export default function ProductDetailClient({ product, variants }: Props) {
             )}
 
             <div className="flex flex-col gap-3">
-              <button
-                type="button"
-                onClick={handleAddToCart}
-                disabled={!canAddToCart}
-                className={`w-full flex items-center justify-center gap-2 font-bold py-4 px-4 rounded-full transition-all duration-300 shadow-md cursor-pointer ${
-                  canAddToCart
-                    ? "bg-primary-500 text-white hover:bg-primary-600 hover:-translate-y-0.5 shadow-primary-500/20"
-                    : "bg-zinc-200 text-zinc-500 cursor-not-allowed shadow-transparent"
-                }`}
-              >
-                أضف إلى السلة
-              </button>
+              {addState === "added" ? (
+                <Link
+                  href="/checkout"
+                  className="w-full flex items-center justify-center gap-2 font-bold py-4 px-4 rounded-full transition-all duration-300 shadow-md bg-zinc-900 text-white hover:bg-zinc-800 hover:-translate-y-0.5"
+                >
+                  الذهاب إلى الدفع
+                </Link>
+              ) : (
+                <button
+                  type="button"
+                  onClick={handleAddToCart}
+                  disabled={!canAddToCart}
+                  className={`w-full flex items-center justify-center gap-2 font-bold py-4 px-4 rounded-full transition-all duration-300 shadow-md cursor-pointer ${
+                    canAddToCart
+                      ? "bg-primary-500 text-white hover:bg-primary-600 hover:-translate-y-0.5 shadow-primary-500/20"
+                      : "bg-zinc-200 text-zinc-500 cursor-not-allowed shadow-transparent"
+                  }`}
+                >
+                  أضف إلى السلة
+                </button>
+              )}
 
               <a
                 href={`https://wa.me/+212684452931?text=${encodeURIComponent(waText)}`}
@@ -268,12 +277,6 @@ export default function ProductDetailClient({ product, variants }: Props) {
               >
                 اطلب عبر واتساب
               </a>
-
-              {addState === "added" && (
-                <p className="text-sm font-medium text-emerald-700">
-                  تمت إضافة المنتج إلى السلة. يمكنك الآن متابعة الطلب من صفحة الدفع.
-                </p>
-              )}
             </div>
           </div>
         </div>
